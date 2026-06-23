@@ -265,8 +265,9 @@ footer a:hover{color:#FFFAF7;}
 </div>
 
 <script>
-const SUPABASE_URL='https://vmwmkxcliddnzpsvdznq.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtd21reGNsaWRkbnpwc3Zkem5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTM3OTcsImV4cCI6MjA4ODIyOTc5N30.FD-iU2QpI8jFFIalfGaSGaU12T42nTx_tTlxIEnmpVE';
+// ✅ المفتاح الجديد والرابط الجديد
+const SUPABASE_URL = 'https://vlbcemidwvarxzglgdct.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsYmNlbWlkd3Zhcnh6Z2xnZGN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDY2ODcsImV4cCI6MjA5NzgyMjY4N30.4qZHZLOyuSUsEBEnkyMW3zMDtxj2HFMN53Kp7cpEJxc';
 const H={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
 
 async function sbGet(t,q=''){const r=await fetch(`${SUPABASE_URL}/rest/v1/${t}?${q}`,{headers:{...H,'Accept':'application/json'}});return r.ok?r.json():[];}
@@ -452,10 +453,9 @@ function flash(id,msg){const el=document.getElementById(id);if(!el)return;el.tex
 function showLoading(){document.getElementById('loading-overlay').style.display='flex';}
 function hideLoading(){document.getElementById('loading-overlay').style.display='none';}
 
-// get sizes for item
 function getItemSizes(item){
   if(item.sizes&&item.sizes.length)return item.sizes;
-  return ALL_SIZES; // backward compat
+  return ALL_SIZES;
 }
 function isFreeSize(item){return item.sizes&&item.sizes.length===1&&item.sizes[0]==='FREE';}
 
@@ -495,7 +495,6 @@ function applyLang(){
   setText('nuke-title',t('nukeTitle'));setText('nuke-desc',t('nukeDesc'));setText('nuke-btn',t('nukeBtn'));
 }
 
-// ===== USERS =====
 window.clearOnFirstFocus=function(el){if(!el.dataset.touched){el.value='';el.dataset.touched='1';}}
 window.checkExistingUser=async function(){
   const name=document.getElementById('iname').value.trim().toLowerCase();
@@ -510,7 +509,6 @@ async function saveUser(name,phone){
   if(!existing){const row=await sbInsert('users',{name,phone});users.push(row);}
 }
 
-// ===== AUTH =====
 window.doLogin=async function(){
   const name=document.getElementById('iname').value.trim();
   const phone=document.getElementById('iphone').value.trim();
@@ -558,7 +556,6 @@ function goCart(){showPage('cart-page');renderCart();[0,1,2].forEach(i=>document
 function goMyOrders(){showPage('myorders-page');renderMyOrders();[0,1,2].forEach(i=>document.getElementById('bn'+i).classList.toggle('on',i===2));}
 window.goCart=goCart;
 
-// ===== HERO =====
 function startHero(){
   document.getElementById('hdots').innerHTML=[0,1,2].map(i=>`<div class="hdot ${i===0?'on':''}" onclick="goHero(${i})"></div>`).join('');
   renderHeroSlides();clearInterval(heroTimer);heroTimer=setInterval(()=>heroSlide(1),4500);
@@ -575,7 +572,6 @@ function renderHeroSlides(){
 window.heroSlide=function(d){heroIdx=(heroIdx+d+3)%3;document.getElementById('hslides').style.transform=`translateX(${lang==='ar'?heroIdx*100:-heroIdx*100}%)`;document.querySelectorAll('.hdot').forEach((dot,i)=>dot.classList.toggle('on',i===heroIdx));}
 window.goHero=function(i){heroIdx=i;window.heroSlide(0);}
 
-// ===== HERO ADMIN =====
 function renderHeroAdmin(){
   document.getElementById('hero-slides-admin').innerHTML=heroData.map((s,i)=>{
     const hm=!!s.media;
@@ -611,7 +607,6 @@ window.saveSectionTitles=async function(){
   await sbSetConfig('sec',secTitles);hideLoading();alert(t('saved'));
 }
 
-// ===== SEARCH =====
 window.doSearch=function(){
   const q=document.getElementById('search-inp').value.trim().toLowerCase();
   const sr=document.getElementById('search-results');
@@ -641,7 +636,6 @@ function renderNewArrivals(){
   document.getElementById('new-row').innerHTML=ni.map(item=>{const img=item.imgs?.[0];return`<div class="feat-card" onclick="openDetail('${item.id}')"><div class="feat-img">${img?`<img src="${img}" onerror="this.parentElement.innerHTML='👗'"/>`:'👗'}</div><div class="feat-info"><div class="feat-badge">🆕</div><h4>${nm(item)}</h4><p>${item.price}${t('priceSuffix')}</p></div></div>`;}).join('');
 }
 
-// ===== COLLECTIONS =====
 function renderCols(){
   const g=document.getElementById('cols-grid');setText('cols-section-title',t('colsTitle'));
   if(!cols.length){g.innerHTML=`<div style="color:var(--muted);padding:48px;text-align:center;">${t('noCols')}</div>`;return;}
@@ -669,7 +663,6 @@ function renderItemCard(item){
     </div></div>`;
 }
 
-// ===== DETAIL =====
 window.openDetail=function(id){
   detailItem=items.find(i=>i.id===id);detailSz=null;
   detailFrom=document.querySelector('.page.active')?.id||'cpage';
@@ -694,17 +687,14 @@ window.openDetail=function(id){
     actionsEl.style.display='flex';
     soldBar.style.display='none';
   }
-  // sizes
-  const szLabel=document.getElementById('det-sz-label');
-  const szWrap=document.getElementById('det-sizes');
   if(isFreeSize(detailItem)){
-    szLabel.style.display='none';
-    szWrap.innerHTML=`<div class="det-sz free">Free Size</div>`;
+    document.getElementById('det-sz-label').style.display='none';
+    document.getElementById('det-sizes').innerHTML=`<div class="det-sz free">Free Size</div>`;
     detailSz='FREE';
   } else {
-    szLabel.style.display='block';
+    document.getElementById('det-sz-label').style.display='block';
     const availSizes=getItemSizes(detailItem);
-    szWrap.innerHTML=availSizes.map(s=>`<div class="det-sz" onclick="selDetSz('${s}',this)">${s}</div>`).join('');
+    document.getElementById('det-sizes').innerHTML=availSizes.map(s=>`<div class="det-sz" onclick="selDetSz('${s}',this)">${s}</div>`).join('');
   }
   renderDetailReviews(id);
   showPage('detail-page');
@@ -783,7 +773,6 @@ window.orderFromDetail=function(){
 window.shareItem=function(){navigator.clipboard.writeText(nm(detailItem)+' - '+detailItem.price+t('priceSuffix')).then(()=>alert(t('copiedAlert'))).catch(()=>{});}
 window.shareWA=function(){window.open(`https://wa.me/?text=${encodeURIComponent(nm(detailItem)+'\n'+detailItem.price+t('priceSuffix')+'\nنِعَم Store')}`,'_blank');}
 
-// ===== CART =====
 function updateCartBadge(){const b=document.getElementById('cart-cnt');if(cart.length){b.style.display='flex';b.textContent=cart.length;}else b.style.display='none';}
 function renderCart(){
   const list=document.getElementById('cart-list'),summary=document.getElementById('cart-summary'),empty=document.getElementById('cart-empty');
@@ -823,7 +812,6 @@ window.confirmCartOrder=async function(){
   hideLoading();closeM('mco');openM('ms');renderCart();
 }
 
-// ===== ORDER =====
 window.openOrder=function(id){ordItem=items.find(i=>i.id===id);selSz=null;selDlv=null;openOrderWith(ordItem,null);}
 function openOrderWith(item,preSz){
   document.getElementById('mo-iname').textContent=nm(item)+'  —  '+item.price+t('priceSuffix');
@@ -861,7 +849,6 @@ window.confirmOrder=async function(){
   hideLoading();closeM('mo');openM('ms');
 }
 
-// ===== ADMIN TABS =====
 window.aTab=function(n){
   [0,1,2,3,4,5,6,7].forEach(i=>{document.getElementById('adm'+i).style.display=i===n?'block':'none';document.getElementById('at'+i).classList.toggle('on',i===n);});
   if(n===0)renderStats();if(n===1)renderHeroAdmin();if(n===7)renderAReviews();
@@ -936,7 +923,6 @@ function renderAReviews(){
   tb.innerHTML=[...reviews].reverse().map(r=>`<tr><td>${r.user}</td><td style="max-width:120px;font-size:.8rem;">${r.item_name||'-'}</td><td><span style="color:#f5a623;">${'★'.repeat(r.rating)}<span style="color:#ddd;">${'★'.repeat(5-r.rating)}</span></span></td><td style="max-width:180px;font-size:.82rem;">${r.comment||'—'}</td><td style="font-size:.78rem;">${new Date(r.date).toLocaleDateString(lang==='ar'?'ar-EG':'en-US')}</td><td><button class="del-btn" onclick="delReview('${r.id}')">🗑</button></td></tr>`).join('');
 }
 
-// ===== SIZE PICKER ADMIN =====
 function renderSizePicker(){
   const isFree=editSizes.length===1&&editSizes[0]==='FREE';
   document.getElementById('sz-picker-wrap').innerHTML=ALL_SIZES.map(s=>`
@@ -955,7 +941,6 @@ window.selectAllSizes=function(){editSizes=[...ALL_SIZES];renderSizePicker();}
 window.clearAllSizes=function(){editSizes=[];renderSizePicker();}
 window.setFreeSize=function(){editSizes=['FREE'];renderSizePicker();}
 
-// ===== DELETE =====
 function customConfirm(msg,cb){document.getElementById('mconfirm-msg').textContent=msg;document.getElementById('mconfirm-ok').onclick=()=>{closeM('mconfirm');cb();};document.getElementById('mconfirm').classList.add('open');}
 window.delItem=function(id){customConfirm(t('delItemMsg'),async()=>{showLoading();await sbDelete('items',id);items=items.filter(i=>i.id!==id);hideLoading();renderAItems();renderStats();flash('okmsg-i',t('delItem'));});}
 window.delCol=function(id){customConfirm(t('delColMsg'),async()=>{showLoading();await sbDelete('cols',id);const childIds=items.filter(i=>i.cid===id).map(i=>i.id);await Promise.all(childIds.map(cid=>sbDelete('items',cid)));cols=cols.filter(c=>c.id!==id);items=items.filter(i=>i.cid!==id);hideLoading();renderACols();renderAItems();renderStats();});}
@@ -975,7 +960,6 @@ window.nukeAll=function(){
   });
 }
 
-// ===== CRUD =====
 window.addCol=async function(){
   const ar=document.getElementById('mc-ar').value.trim(),en=document.getElementById('mc-en').value.trim();
   if(!ar||!en){alert(t('completeData'));return;}
@@ -1044,7 +1028,6 @@ window.addCoupon=async function(){
   hideLoading();closeM('mcoup');renderACoupons();renderStats();flash('okmsg-coup',t('savedCoup'));
 }
 
-// ===== MODALS =====
 window.openM=function(id){if(id==='mi'&&!editItemId){resetItemModal();document.getElementById('mi-col').innerHTML=cols.map(c=>`<option value="${c.id}">${cnm(c)}</option>`).join('');}document.getElementById(id).classList.add('open');}
 window.closeM=function(id){document.getElementById(id).classList.remove('open');}
 
@@ -1297,7 +1280,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       <div class="imgs-row" id="imgs-row"></div>
     </div>
 
-    <!-- SIZES -->
     <div class="iw">
       <label id="mi-sizes-lbl"></label>
       <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
@@ -1308,7 +1290,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       <div class="sz-picker" id="sz-picker-wrap"></div>
     </div>
 
-    <!-- STOCK -->
     <div class="iw">
       <label id="mi-stock-lbl"></label>
       <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
